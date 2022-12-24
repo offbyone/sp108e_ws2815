@@ -1,0 +1,93 @@
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[project]
+name = "sp108e-ws2815"
+description = "A Home Assistant component for interacting with sp108e_ws2815"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { file = "README.md" }
+keywords = [
+  "home assistant",
+  "led",
+  "home automation",
+]
+authors = [
+  { name = "Chris Rose", email="offline@offby1.net" },
+  { name = "Sam Stein" },
+]
+dynamic = ["version"]
+dependencies = [
+]
+
+[project.optional-dependencies]
+docs = []
+tests = [
+  "pytest>=5.0",
+  "pytest-sugar",
+  "pytest-xdist",
+  "coverage[toml]",
+  "pytest-homeassistant-custom-component",
+]
+dev = [
+  "sp108e-ws2815[docs,tests]",
+  "invoke",
+  "towncrier",
+  "twine",
+  "pytest-mypy",
+  "flake8",
+  "black",
+  "doc2dash",
+]
+
+[tool.hatch.version]
+path = "manifest.json"
+pattern = '"version": "(?P<version>.+?)"'
+# source = "vcs"
+
+[tool.hatch.envs.dev]
+dependencies = [
+  "sp108e_ws2815[dev]",
+]
+
+[tool.hatch.envs.dev.scripts]
+cov = "pytest --cov=pelican_embed_microblog"
+cov-ci = "coverage run -p -m pytest"
+
+[tool.hatch.build.targets.sdist]
+exclude = [
+  "/changelog.d/*.rst",
+  "/.github",
+]
+[tool.hatch.build.targets.wheel]
+exclude = [
+  "/examples",
+]
+packages = [
+  "src/pelican_embed_microblog",
+]
+
+[tool.coverage.run]
+parallel = true
+branch = true
+source = ["pelican_embed_microblog"]
+
+[tool.coverage.paths]
+source = ["src", ".tox/*/site-packages"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+
+[tool.black]
+line_length = 100
+
+[tool.interrogate]
+verbose = 2
+fail-under = 100
+whitelist-regex = ["test_.*"]
+
+[tool.isort]
+profile = "black"
+known_first_party = "pelican_embed_microblog"
